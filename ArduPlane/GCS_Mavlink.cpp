@@ -1389,13 +1389,13 @@ void GCS_MAVLINK_Plane::handle_mission_set_current(AP_Mission &mission, const ma
 
 uint64_t GCS_MAVLINK_Plane::capabilities() const
 {
-    return (MAV_PROTOCOL_CAPABILITY_MISSION_FLOAT |
-            MAV_PROTOCOL_CAPABILITY_COMMAND_INT |
-            MAV_PROTOCOL_CAPABILITY_MISSION_INT |
-            MAV_PROTOCOL_CAPABILITY_SET_POSITION_TARGET_GLOBAL_INT |
-            MAV_PROTOCOL_CAPABILITY_SET_ATTITUDE_TARGET |
+    return (MAV_protocol_CAPABILITY_MISSION_FLOAT |
+            MAV_protocol_CAPABILITY_COMMAND_INT |
+            MAV_protocol_CAPABILITY_MISSION_INT |
+            MAV_protocol_CAPABILITY_SET_POSITION_TARGET_GLOBAL_INT |
+            MAV_protocol_CAPABILITY_SET_ATTITUDE_TARGET |
 #if AP_TERRAIN_AVAILABLE
-            (plane.terrain.enabled() ? MAV_PROTOCOL_CAPABILITY_TERRAIN : 0) |
+            (plane.terrain.enabled() ? MAV_protocol_CAPABILITY_TERRAIN : 0) |
 #endif
             GCS_MAVLINK::capabilities());
 }

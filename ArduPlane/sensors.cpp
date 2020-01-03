@@ -83,3 +83,9 @@ void Plane::rpm_update(void)
         }
     }
 }
+
+void Plane::communicate_Ti (void)       // Sonin Aero
+{
+	int soc;   					 // state of charge in %  0-99
+	int remaining_flight_time; 	 // Flight Time remaining in minutes 
+}

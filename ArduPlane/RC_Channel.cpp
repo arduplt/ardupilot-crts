@@ -61,7 +61,6 @@ void RC_Channel_Plane::init_aux_function(const RC_Channel::aux_func_t ch_option,
     case AUX_FUNC::ARMDISARM:
     case AUX_FUNC::AUTO:
     case AUX_FUNC::CIRCLE:
-    case AUX_FUNC::LOITER:
     case AUX_FUNC::GUIDED:
     case AUX_FUNC::INVERTED:
     case AUX_FUNC::MANUAL:
@@ -107,10 +106,6 @@ void RC_Channel_Plane::do_aux_function(const aux_func_t ch_option, const aux_swi
     case AUX_FUNC::CIRCLE:
         do_aux_function_change_mode(Mode::Number::CIRCLE, ch_flag);
         break;
-            
-    case AUX_FUNC::LOITER:
-        do_aux_function_change_mode(Mode::Number::LOITER, ch_flag);
-        break;        
 
     case AUX_FUNC::GUIDED:
         do_aux_function_change_mode(Mode::Number::GUIDED, ch_flag);

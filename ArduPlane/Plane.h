@@ -39,6 +39,7 @@
 #include <AP_AHRS/AP_AHRS.h>         // ArduPilot Mega DCM Library
 #include <SRV_Channel/SRV_Channel.h>
 #include <AP_RangeFinder/AP_RangeFinder.h>     // Range finder library
+#include <AP_Ticommunication/AP_Ticommunication.h> // Sonin Aero
 #include <Filter/Filter.h>                     // Filter library
 #include <AP_Camera/AP_Camera.h>          // Photo or video camera
 #include <AP_Airspeed/AP_Airspeed.h>
@@ -893,6 +894,7 @@ private:
     bool rc_throttle_value_ok(void) const;
     bool rc_failsafe_active(void) const;
     void read_rangefinder(void);
+	void communicate_Ti (void);  // Sonin Aero
     void read_airspeed(void);
     void rpm_update(void);
     void efi_update(void);

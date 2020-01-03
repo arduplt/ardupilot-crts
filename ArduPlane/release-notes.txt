@@ -1213,7 +1213,7 @@ The bug fixes are:
 The new feature is that you can set the protocol for the debug UART on
 FMUv2 or FMUv3 board (such as a Pixhawk or Cube) to allow allow UART5
 to be used for arbitrary protocols. To use this fetaure just set
-SERIAL5_PROTOCOL to the desired serial protocol. This should be useful
+SERIAL5_protocol to the desired serial protocol. This should be useful
 to users who have multiple serial devices (such as rangefinders) they
 want to connect and have run out of UARTs.
 
@@ -2656,7 +2656,7 @@ Changes in this release:
   - new Rangefinder code with support for a wider range of rangefinder
     types including a range of Lidars (thanks to Allyson Kreft)
 
-  - added support for FrSky telemetry via SERIAL2_PROTOCOL parameter
+  - added support for FrSky telemetry via SERIAL2_protocol parameter
     (thanks to Matthias Badaire)
 
   - added new STAB_PITCH_DOWN parameter to improve low throttle
