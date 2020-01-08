@@ -158,6 +158,7 @@ public:
     friend class ModeQAcro;
     friend class ModeQAutotune;
     friend class ModeTakeoff;
+	
 
     Plane(void);
 
@@ -198,6 +199,11 @@ private:
     AP_Vehicle::FixedWing::Rangefinder_State rangefinder_state;
 
     AP_RPM rpm_sensor;
+
+    // Sonin Aero Ticommunication
+
+    AP_Ticommunication Ticommunication;
+
 
     AP_TECS TECS_controller{ahrs, aparm, landing};
     AP_L1_Control L1_controller{ahrs, &TECS_controller};
@@ -394,6 +400,8 @@ private:
 
     // Airspeed Sensors
     AP_Airspeed airspeed;
+
+
 
     // ACRO controller state
     struct {
