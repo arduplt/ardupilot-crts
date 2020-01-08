@@ -89,6 +89,11 @@
 #define AP_SERIALMANAGER_EFI_MS_BUFSIZE_RX     512
 #define AP_SERIALMANAGER_EFI_MS_BUFSIZE_TX     16
 
+// Ticommunication protocol    // Sonin Aero
+#define AP_SERIALMANAGER_EFI_MS_BAUD           115
+#define AP_SERIALMANAGER_EFI_MS_BUFSIZE_RX     512
+#define AP_SERIALMANAGER_EFI_MS_BUFSIZE_TX     16
+
 // SBUS servo outputs
 #define AP_SERIALMANAGER_SBUS1_BAUD           100000
 #define AP_SERIALMANAGER_SBUS1_BUFSIZE_RX     16
@@ -120,7 +125,7 @@ public:
         SerialProtocol_Rangefinder = 9,
         SerialProtocol_FrSky_SPort_Passthrough = 10, // FrSky SPort Passthrough (OpenTX) protocol (X-receivers)
         SerialProtocol_Lidar360 = 11,                // Lightware SF40C, TeraRanger Tower or RPLidarA2
-        SerialProtocol_Aerotenna_uLanding      = 12, // Ulanding support - deprecated, users should use Rangefinder
+        SerialProtocol_Ticommunication      = 12,    // Sonin Aero : we will use SerialProtocol nr 12 for our TI communication
         SerialProtocol_Beacon = 13,
         SerialProtocol_Volz = 14,                    // Volz servo protocol
         SerialProtocol_Sbus1 = 15,
@@ -134,6 +139,7 @@ public:
         SerialProtocol_RCIN = 23,
         SerialProtocol_EFI_MS = 24,                   // MegaSquirt EFI serial protocol
         SerialProtocol_LTM_Telem = 25,
+        SerialProtocol_RunCam = 26
     };
 
     // get singleton instance

@@ -22,52 +22,54 @@
 
 #include <AP_HAL/AP_HAL.h>
 #include <AP_Math/AP_Math.h>
-#include <AP_RCProtocol/AP_RCProtocol.h>
+#include <AP_RCprotocol/AP_RCprotocol.h>
 #include "AP_SerialManager.h"
 
 extern const AP_HAL::HAL& hal;
 
-#ifdef HAL_SERIAL2_PROTOCOL
-#define SERIAL2_PROTOCOL HAL_SERIAL2_PROTOCOL
+#ifdef HAL_SERIAL2_protocol
+#define SERIAL2_protocol HAL_SERIAL2_protocol
 #else
-#define SERIAL2_PROTOCOL SerialProtocol_MAVLink
+#define SERIAL2_protocol SerialProtocol_Ticommunication   // Sonin Aero
 #endif
 
-#ifndef HAL_SERIAL3_PROTOCOL
-#define SERIAL3_PROTOCOL SerialProtocol_GPS
+#ifndef HAL_SERIAL3_protocol
+#define SERIAL3_protocol SerialProtocol_GPS
 #else
-#define SERIAL3_PROTOCOL HAL_SERIAL3_PROTOCOL
+#define SERIAL3_protocol HAL_SERIAL3_protocol
 #endif
 
-#ifndef HAL_SERIAL4_PROTOCOL
-#define SERIAL4_PROTOCOL SerialProtocol_GPS
+#ifndef HAL_SERIAL4_protocol
+#define SERIAL4_protocol SerialProtocol_GPS
 #else
-#define SERIAL4_PROTOCOL HAL_SERIAL4_PROTOCOL
+#define SERIAL4_protocol HAL_SERIAL4_protocol
 #endif
 
-#ifdef HAL_SERIAL5_PROTOCOL
-#define SERIAL5_PROTOCOL HAL_SERIAL5_PROTOCOL
+#ifdef HAL_SERIAL5_protocol
+#define SERIAL5_protocol HAL_SERIAL5_protocol
 #define SERIAL5_BAUD HAL_SERIAL5_BAUD
 #else
-#define SERIAL5_PROTOCOL SerialProtocol_None
+#define SERIAL5_protocol SerialProtocol_None
 #define SERIAL5_BAUD AP_SERIALMANAGER_MAVLINK_BAUD/1000
 #endif
 
-#ifndef HAL_SERIAL6_PROTOCOL
-#define SERIAL6_PROTOCOL SerialProtocol_None
+#ifndef HAL_SERIAL6_protocol
+#define SERIAL6_protocol SerialProtocol_None
 #define SERIAL6_BAUD AP_SERIALMANAGER_MAVLINK_BAUD/1000
 #else
-#define SERIAL6_PROTOCOL HAL_SERIAL6_PROTOCOL
+#define SERIAL6_protocol HAL_SERIAL6_protocol
 #define SERIAL6_BAUD HAL_SERIAL6_BAUD
 #endif
 
-#ifndef HAL_SERIAL7_PROTOCOL
-#define SERIAL7_PROTOCOL SerialProtocol_None
+#ifndef HAL_SERIAL7_protocol
+#define SERIAL7_protocol SerialProtocol_None
 #define SERIAL7_BAUD AP_SERIALMANAGER_MAVLINK_BAUD/1000
 #else
-#define SERIAL7_PROTOCOL HAL_SERIAL7_PROTOCOL
+#define SERIAL7_protocol HAL_SERIAL7_protocol
 #define SERIAL7_BAUD HAL_SERIAL7_BAUD
 #endif
+
+// Sonin Aero: we will use protocol nr. 12 for our Serial communication protocol - Ticommunication
 
 const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
 #if SERIALMANAGER_NUM_PORTS > 0
@@ -78,23 +80,23 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("0_BAUD",  0, AP_SerialManager, state[0].baud, AP_SERIALMANAGER_CONSOLE_BAUD/1000),
 
-    // @Param: 0_PROTOCOL
+    // @Param: 0_protocol
     // @DisplayName: Console protocol selection
     // @Description: Control what protocol to use on the console. 
     // @Values: 1:MAVlink1, 2:MAVLink2
     // @User: Standard
     // @RebootRequired: True
-    AP_GROUPINFO("0_PROTOCOL",  11, AP_SerialManager, state[0].protocol, SerialProtocol_MAVLink2),
+    AP_GROUPINFO("0_protocol",  11, AP_SerialManager, state[0].protocol, SerialProtocol_MAVLink2),
 #endif
 
 #if SERIALMANAGER_NUM_PORTS > 1
-    // @Param: 1_PROTOCOL
+    // @Param: 1_protocol
     // @DisplayName: Telem1 protocol selection
     // @Description: Control what protocol to use on the Telem1 port. Note that the Frsky options require external converter hardware. See the wiki for details.
-    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
+    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 12: Ticommunication, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
     // @User: Standard
     // @RebootRequired: True
-    AP_GROUPINFO("1_PROTOCOL",  1, AP_SerialManager, state[1].protocol, SerialProtocol_MAVLink),
+    AP_GROUPINFO("1_protocol",  1, AP_SerialManager, state[1].protocol, SerialProtocol_MAVLink),
 
     // @Param: 1_BAUD
     // @DisplayName: Telem1 Baud Rate
@@ -105,13 +107,13 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
 #endif
 
 #if SERIALMANAGER_NUM_PORTS > 2
-    // @Param: 2_PROTOCOL
+    // @Param: 2_protocol
     // @DisplayName: Telemetry 2 protocol selection
     // @Description: Control what protocol to use on the Telem2 port. Note that the Frsky options require external converter hardware. See the wiki for details.
-    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
+    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 12: Ticommunication, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
     // @User: Standard
     // @RebootRequired: True
-    AP_GROUPINFO("2_PROTOCOL",  3, AP_SerialManager, state[2].protocol, SERIAL2_PROTOCOL),
+    AP_GROUPINFO("2_protocol",  3, AP_SerialManager, state[2].protocol, SERIAL2_protocol),
 
     // @Param: 2_BAUD
     // @DisplayName: Telemetry 2 Baud Rate
@@ -122,13 +124,13 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
 #endif
 
 #if SERIALMANAGER_NUM_PORTS > 3
-    // @Param: 3_PROTOCOL
+    // @Param: 3_protocol
     // @DisplayName: Serial 3 (GPS) protocol selection
     // @Description: Control what protocol Serial 3 (GPS) should be used for. Note that the Frsky options require external converter hardware. See the wiki for details.
-    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
+    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 12: Ticommunication, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
     // @User: Standard
     // @RebootRequired: True
-    AP_GROUPINFO("3_PROTOCOL",  5, AP_SerialManager, state[3].protocol, SERIAL3_PROTOCOL),
+    AP_GROUPINFO("3_protocol",  5, AP_SerialManager, state[3].protocol, SERIAL3_protocol),
 
     // @Param: 3_BAUD
     // @DisplayName: Serial 3 (GPS) Baud Rate
@@ -139,13 +141,13 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
 #endif
 
 #if SERIALMANAGER_NUM_PORTS > 4
-    // @Param: 4_PROTOCOL
+    // @Param: 4_protocol
     // @DisplayName: Serial4 protocol selection
     // @Description: Control what protocol Serial4 port should be used for. Note that the Frsky options require external converter hardware. See the wiki for details.
-    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
+    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 12: Ticommunication, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
     // @User: Standard
     // @RebootRequired: True
-    AP_GROUPINFO("4_PROTOCOL",  7, AP_SerialManager, state[4].protocol, SERIAL4_PROTOCOL),
+    AP_GROUPINFO("4_protocol",  7, AP_SerialManager, state[4].protocol, SERIAL4_protocol),
 
     // @Param: 4_BAUD
     // @DisplayName: Serial 4 Baud Rate
@@ -156,13 +158,13 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
 #endif
 
 #if SERIALMANAGER_NUM_PORTS > 5
-    // @Param: 5_PROTOCOL
+    // @Param: 5_protocol
     // @DisplayName: Serial5 protocol selection
     // @Description: Control what protocol Serial5 port should be used for. Note that the Frsky options require external converter hardware. See the wiki for details.
-    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
+    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 12: Ticommunication, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
     // @User: Standard
     // @RebootRequired: True
-    AP_GROUPINFO("5_PROTOCOL",  9, AP_SerialManager, state[5].protocol, SERIAL5_PROTOCOL),
+    AP_GROUPINFO("5_protocol",  9, AP_SerialManager, state[5].protocol, SERIAL5_protocol),
 
     // @Param: 5_BAUD
     // @DisplayName: Serial 5 Baud Rate
@@ -172,16 +174,16 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
     AP_GROUPINFO("5_BAUD", 10, AP_SerialManager, state[5].baud, SERIAL5_BAUD),
 #endif
 
-    // index 11 used by 0_PROTOCOL
+    // index 11 used by 0_protocol
         
 #if SERIALMANAGER_NUM_PORTS > 6
-    // @Param: 6_PROTOCOL
+    // @Param: 6_protocol
     // @DisplayName: Serial6 protocol selection
     // @Description: Control what protocol Serial6 port should be used for. Note that the Frsky options require external converter hardware. See the wiki for details.
-    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
+    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 12: Ticommunication, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
     // @User: Standard
     // @RebootRequired: True
-    AP_GROUPINFO("6_PROTOCOL",  12, AP_SerialManager, state[6].protocol, SERIAL6_PROTOCOL),
+    AP_GROUPINFO("6_protocol",  12, AP_SerialManager, state[6].protocol, SERIAL6_protocol),
 
     // @Param: 6_BAUD
     // @DisplayName: Serial 6 Baud Rate
@@ -274,13 +276,13 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
     AP_GROUPINFO("_PASSTIMO",  22, AP_SerialManager, passthru_timeout, 15),
 
 #if SERIALMANAGER_NUM_PORTS > 7
-    // @Param: 7_PROTOCOL
+    // @Param: 7_protocol
     // @DisplayName: Serial7 protocol selection
     // @Description: Control what protocol Serial7 port should be used for. Note that the Frsky options require external converter hardware. See the wiki for details.
-    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
+    // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Rangefinder, 10:FrSky SPort Passthrough (OpenTX), 11:Lidar360, 12: Ticommunication, 13:Beacon, 14:Volz servo out, 15:SBus servo out, 16:ESC Telemetry, 17:Devo Telemetry, 18:OpticalFlow, 19:RobotisServo, 20:NMEA Output, 21:WindVane, 22:SLCAN, 23:RCIN, 24:MegaSquirt EFI, 25:LTM
     // @User: Standard
     // @RebootRequired: True
-    AP_GROUPINFO("7_PROTOCOL",  23, AP_SerialManager, state[7].protocol, SERIAL7_PROTOCOL),
+    AP_GROUPINFO("7_protocol",  23, AP_SerialManager, state[7].protocol, SERIAL7_protocol),
 
     // @Param: 7_BAUD
     // @DisplayName: Serial 7 Baud Rate
@@ -337,7 +339,7 @@ void AP_SerialManager::init()
     state[1].uart = hal.uartC;  // serial1, uartC, normally telem1
 #endif
 #if SERIALMANAGER_NUM_PORTS > 2
-    state[2].uart = hal.uartD;  // serial2, uartD, normally telem2
+    state[2].uart = hal.uartD;  // serial2, uartD, normally telem2   // if Type:12 is chosen Ticommunication // Sonin Aero
 #endif
 #if SERIALMANAGER_NUM_PORTS > 3
     state[3].uart = hal.uartB;  // serial3, uartB, normally 1st GPS
@@ -412,8 +414,9 @@ void AP_SerialManager::init()
                                          AP_SERIALMANAGER_SToRM32_BUFSIZE_RX,
                                          AP_SERIALMANAGER_SToRM32_BUFSIZE_TX);
                     break;
-                case SerialProtocol_Aerotenna_uLanding:
-                    state[i].protocol.set_and_save(SerialProtocol_Rangefinder);
+                case SerialProtocol_Ticommunication:   // Sonin Aero
+                    // state[i].protocol.set_and_save(SerialProtocol_Rangefinder);
+					state[i].uart->begin(map_baudrate(state[i].baud));    // Sonin Aero
                     break;
                 case SerialProtocol_Volz:
                                     // Note baudrate is hardcoded to 115200
